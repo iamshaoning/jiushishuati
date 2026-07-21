@@ -1,7 +1,7 @@
 import { supabase } from './supabase';
 import type { User, UserRole, UserStatus } from './types';
 
-const SESSION_KEY = 'shuati_admin_session';
+const SESSION_KEY = 'jiushishuati_session';
 
 // 与本地刷题工具一致的状态语义
 // 0 = NORMAL（正常）, 1 = BANNED（封禁）, 2 = PENDING（待审批）
