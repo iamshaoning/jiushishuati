@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useToast } from '@/components/Toast';
 import { useAuth } from '@/context/AuthContext';
-import Layout from '@/components/Layout';
 import StatCard from '@/components/StatCard';
 import {
   listWrongQuestions,
@@ -183,7 +182,7 @@ export default function StudentWrongBook() {
   };
 
   return (
-    <Layout>
+    <>
       <div className="mb-6">
         <h1 className="font-display text-2xl font-bold text-ink-700">错题本</h1>
         <p className="text-sm text-gray-500 mt-1">自动收集练习与考试中的错题，可再次作答</p>
@@ -338,7 +337,7 @@ export default function StudentWrongBook() {
           ))}
         </div>
       )}
-    </Layout>
+    </>
   );
 }
 

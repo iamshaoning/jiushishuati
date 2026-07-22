@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useToast } from '@/components/Toast';
-import Layout from '@/components/Layout';
 import { getBank } from '@/lib/banks';
 import { listQuestions } from '@/lib/questions';
 import { listExamStudentsByBank, listExamWrongAnswersByStudent } from '@/lib/exam';
@@ -69,32 +68,32 @@ export default function TeacherExamRecordDetail() {
 
   if (loading) {
     return (
-      <Layout>
+      <>
         <div className="text-center text-gray-400 py-16 text-sm">
           <Loader2 className="w-5 h-5 mx-auto animate-spin mb-2" />
           加载中...
         </div>
-      </Layout>
+      </>
     );
   }
 
   if (!bank) {
     return (
-      <Layout>
+      <>
         <div className="card p-12 text-center">
           <div className="text-gray-500">试卷不存在</div>
           <button onClick={() => nav('/teacher/exam-records')} className="btn-primary mt-4">
             返回考试记录
           </button>
         </div>
-      </Layout>
+      </>
     );
   }
 
   const correctCount = questions.length - wrongAnswers.length;
 
   return (
-    <Layout>
+    <>
       <button
         onClick={() => nav('/teacher/exam-records')}
         className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-ink-700 mb-4"
@@ -275,6 +274,6 @@ export default function TeacherExamRecordDetail() {
           )}
         </div>
       </div>
-    </Layout>
+    </>
   );
 }

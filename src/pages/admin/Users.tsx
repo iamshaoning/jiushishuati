@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useToast } from '@/components/Toast';
 import { useAuth } from '@/context/AuthContext';
-import Layout from '@/components/Layout';
 import StatCard from '@/components/StatCard';
 import Modal from '@/components/Modal';
 import { STATUS } from '@/lib/auth';
@@ -107,7 +106,7 @@ export default function AdminUsers() {
   };
 
   return (
-    <Layout>
+    <>
       <div className="mb-6">
         <h1 className="font-display text-2xl font-bold text-ink-700">账号管理</h1>
         <p className="text-sm text-gray-500 mt-1">审批教师注册、管理所有账号</p>
@@ -269,7 +268,7 @@ export default function AdminUsers() {
         {delTarget?.role === 'teacher' && ' 该教师名下的题库 owner_id 将置空，题库仍保留。'}
         此操作无法撤销。
       </Modal>
-    </Layout>
+    </>
   );
 }
 

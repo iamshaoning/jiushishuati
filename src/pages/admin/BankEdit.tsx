@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useToast } from '@/components/Toast';
-import Layout from '@/components/Layout';
 import QuestionEditor from '@/components/QuestionEditor';
 import Modal from '@/components/Modal';
 import { getBank, updateBankMeta, deleteBank } from '@/lib/banks';
@@ -142,27 +141,27 @@ export default function AdminBankEdit() {
 
   if (loading) {
     return (
-      <Layout>
+      <>
         <div className="text-center text-gray-400 py-16 text-sm">加载中...</div>
-      </Layout>
+      </>
     );
   }
 
   if (!bank) {
     return (
-      <Layout>
+      <>
         <div className="card p-12 text-center">
           <div className="text-gray-500">题库不存在</div>
           <button onClick={() => nav('/admin/banks')} className="btn-primary mt-4">
             返回列表
           </button>
         </div>
-      </Layout>
+      </>
     );
   }
 
   return (
-    <Layout>
+    <>
       <div className="flex items-center gap-2 mb-4">
         <button
           onClick={() => nav('/admin/banks')}
@@ -380,6 +379,6 @@ export default function AdminBankEdit() {
       >
         确定要删除题库「<b>{bank.name}</b>」吗？该操作会同时删除题库下所有题目，且无法撤销。
       </Modal>
-    </Layout>
+    </>
   );
 }

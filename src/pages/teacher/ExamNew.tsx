@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/components/Toast';
-import Layout from '@/components/Layout';
 import { getBank, createBankWithQuestions } from '@/lib/banks';
 import { listQuestions } from '@/lib/questions';
 import type { QuestionBank, Question, QuestionType, ParsedQuestion } from '@/lib/types';
@@ -174,30 +173,30 @@ export default function TeacherExamNew() {
 
   if (loading) {
     return (
-      <Layout>
+      <>
         <div className="text-center text-gray-400 py-16 text-sm">
           <Loader2 className="w-5 h-5 mx-auto animate-spin mb-2" />
           加载源题库...
         </div>
-      </Layout>
+      </>
     );
   }
 
   if (!sourceBank) {
     return (
-      <Layout>
+      <>
         <div className="card p-12 text-center">
           <div className="text-gray-500">源题库不存在或无访问权限</div>
           <button onClick={() => nav('/teacher')} className="btn-primary mt-4">
             返回题库列表
           </button>
         </div>
-      </Layout>
+      </>
     );
   }
 
   return (
-    <Layout>
+    <>
       <button
         onClick={() => nav('/teacher')}
         className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-ink-700 mb-4"
@@ -398,6 +397,6 @@ export default function TeacherExamNew() {
           </button>
         </div>
       </div>
-    </Layout>
+    </>
   );
 }

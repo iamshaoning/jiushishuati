@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/components/Toast';
-import Layout from '@/components/Layout';
 import StatCard from '@/components/StatCard';
 import Modal from '@/components/Modal';
 import { listAllBanks, adminDeleteBank } from '@/lib/banks';
@@ -53,7 +52,7 @@ export default function AdminBanks() {
   };
 
   return (
-    <Layout>
+    <>
       <div className="mb-6">
         <h1 className="font-display text-2xl font-bold text-ink-700">题库管理</h1>
         <p className="text-sm text-gray-500 mt-1">查看与管理系统内全部题库</p>
@@ -159,6 +158,6 @@ export default function AdminBanks() {
       >
         确定要删除题库「<b>{delTarget?.name}</b>」吗？该操作会同时删除题库下所有题目，且无法撤销。
       </Modal>
-    </Layout>
+    </>
   );
 }

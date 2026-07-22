@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/components/Toast';
-import Layout from '@/components/Layout';
 import StatCard from '@/components/StatCard';
 import { listMyBanks } from '@/lib/banks';
 import { listExamStudentsByBank } from '@/lib/exam';
@@ -46,7 +45,7 @@ export default function TeacherExamRecords() {
   const totalRecords = rows.reduce((s, r) => s + r.students.length, 0);
 
   return (
-    <Layout>
+    <>
       <div className="mb-6">
         <h1 className="font-display text-2xl font-bold text-ink-700">考试记录</h1>
         <p className="text-sm text-gray-500 mt-1">查看试卷被哪些学生获取并完成考试的情况</p>
@@ -159,6 +158,6 @@ export default function TeacherExamRecords() {
           </div>
         </div>
       )}
-    </Layout>
+    </>
   );
 }

@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/components/Toast';
-import Layout from '@/components/Layout';
 import StatCard from '@/components/StatCard';
 import Modal from '@/components/Modal';
 import { listMyBanks, deleteBank } from '@/lib/banks';
@@ -75,7 +74,7 @@ export default function TeacherBanks() {
   };
 
   return (
-    <Layout>
+    <>
       <div className="mb-6 flex items-end justify-between flex-wrap gap-3">
         <div>
           <h1 className="font-display text-2xl font-bold text-ink-700">我的题库</h1>
@@ -224,6 +223,6 @@ export default function TeacherBanks() {
       >
         确定要删除题库「<b>{delTarget?.name}</b>」吗？该操作会同时删除题库下所有题目，且无法撤销。
       </Modal>
-    </Layout>
+    </>
   );
 }

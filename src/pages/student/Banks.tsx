@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/components/Toast';
-import Layout from '@/components/Layout';
 import StatCard from '@/components/StatCard';
 import Modal from '@/components/Modal';
 import {
@@ -114,7 +113,7 @@ export default function StudentBanks() {
   };
 
   return (
-    <Layout>
+    <>
       <div className="mb-6">
         <h1 className="font-display text-2xl font-bold text-ink-700">我的题库</h1>
         <p className="text-sm text-gray-500 mt-1">输入教师提供的分享码领取题库，开始练习</p>
@@ -262,6 +261,6 @@ export default function StudentBanks() {
         <br />
         移除后可重新通过分享码领取，题库本身不受影响。
       </Modal>
-    </Layout>
+    </>
   );
 }

@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
-import Layout from '@/components/Layout';
 import StatCard from '@/components/StatCard';
 import { listPracticeRecords, getStudentStats } from '@/lib/student';
 import type { PracticeRecord } from '@/lib/types';
@@ -51,7 +50,7 @@ export default function StudentPracticeRecords() {
   const bankGroups = Array.from(bankGroupMap.entries()).map(([id, v]) => ({ id, ...v }));
 
   return (
-    <Layout>
+    <>
       <div className="mb-6">
         <h1 className="font-display text-2xl font-bold text-ink-700">练习记录</h1>
         <p className="text-sm text-gray-500 mt-1">查看您的全部练习与考试历史</p>
@@ -184,6 +183,6 @@ export default function StudentPracticeRecords() {
           </div>
         </>
       )}
-    </Layout>
+    </>
   );
 }

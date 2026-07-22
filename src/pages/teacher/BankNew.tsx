@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/components/Toast';
-import Layout from '@/components/Layout';
 import QuestionEditor from '@/components/QuestionEditor';
 import { createBankWithQuestions } from '@/lib/banks';
 
@@ -214,7 +213,7 @@ export default function BankNew() {
   };
 
   return (
-    <Layout>
+    <>
       <button onClick={goBack} className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-ink-700 mb-4">
         <ArrowLeft className="w-3.5 h-3.5" />
         返回
@@ -528,7 +527,7 @@ export default function BankNew() {
           </div>
         </div>
       )}
-    </Layout>
+    </>
   );
 }
 

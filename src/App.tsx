@@ -4,9 +4,9 @@ import { useAuth } from '@/context/AuthContext';
 import { AuthProvider } from '@/context/AuthContext';
 import { ToastProvider } from '@/components/Toast';
 import { STATUS } from '@/lib/auth';
+import Layout from '@/components/Layout';
 
-import Login from '@/pages/Login';
-import Register from '@/pages/Register';
+import AuthPage from '@/pages/AuthPage';
 import TeacherBanks from '@/pages/teacher/Banks';
 import TeacherBankNew from '@/pages/teacher/BankNew';
 import TeacherBankEdit from '@/pages/teacher/BankEdit';
@@ -40,124 +40,80 @@ function RequireAuth({ children, role }: { children: ReactNode; role: 'teacher' 
   return <>{children}</>;
 }
 
+// 嵌套路由：Layout 包裹 Outlet，子路由切换时 Layout 不重挂，保证菜单滑动指示器与侧边栏稳定
+function AnimatedRoutes() {
+  const location = useLocation();
+  return (
+    <Routes location={location}>
+      <Route path="/login" element={<AuthPage />} />
+      <Route path="/register" element={<AuthPage />} />
+
+      {/* 教师路由组 */}
+      <Route
+        path="/teacher"
+        element={
+          <RequireAuth role="teacher">
+            <Layout />
+          </RequireAuth>
+        }
+      >
+        <Route index element={<TeacherBanks />} />
+        <Route path="banks/new" element={<TeacherBankNew />} />
+        <Route path="banks/:id" element={<TeacherBankEdit />} />
+        <Route path="exam-new/:fromBankId" element={<TeacherExamNew />} />
+        <Route path="exam-records" element={<TeacherExamRecords />} />
+        <Route path="exam-records/:bankId" element={<TeacherExamRecordDetail />} />
+      </Route>
+
+      {/* 管理员路由组 */}
+      <Route
+        path="/admin"
+        element={
+          <RequireAuth role="admin">
+            <Layout />
+          </RequireAuth>
+        }
+      >
+        <Route index element={<AdminUsers />} />
+        <Route path="banks" element={<AdminBanks />} />
+        <Route path="banks/:id" element={<AdminBankEdit />} />
+      </Route>
+
+      {/* 学生路由组：Practice 独立全屏，不放入 Layout */}
+      <Route
+        path="/student"
+        element={
+          <RequireAuth role="student">
+            <Layout />
+          </RequireAuth>
+        }
+      >
+        <Route index element={<StudentBanks />} />
+        <Route path="records" element={<StudentPracticeRecords />} />
+        <Route path="wrong" element={<StudentWrongBook />} />
+      </Route>
+
+      {/* Practice 全屏独立路由（不使用 Layout） */}
+      <Route
+        path="/student/practice/:bankId"
+        element={
+          <RequireAuth role="student">
+            <StudentPractice />
+          </RequireAuth>
+        }
+      />
+
+      <Route path="*" element={<Navigate to="/login" replace />} />
+    </Routes>
+  );
+}
+
 export default function App() {
   return (
     <AuthProvider>
       <ToastProvider>
         <Router>
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-
-            <Route
-              path="/teacher"
-              element={
-                <RequireAuth role="teacher">
-                  <TeacherBanks />
-                </RequireAuth>
-              }
-            />
-            <Route
-              path="/teacher/banks/new"
-              element={
-                <RequireAuth role="teacher">
-                  <TeacherBankNew />
-                </RequireAuth>
-              }
-            />
-            <Route
-              path="/teacher/banks/:id"
-              element={
-                <RequireAuth role="teacher">
-                  <TeacherBankEdit />
-                </RequireAuth>
-              }
-            />
-            <Route
-              path="/teacher/exam-new/:fromBankId"
-              element={
-                <RequireAuth role="teacher">
-                  <TeacherExamNew />
-                </RequireAuth>
-              }
-            />
-            <Route
-              path="/teacher/exam-records"
-              element={
-                <RequireAuth role="teacher">
-                  <TeacherExamRecords />
-                </RequireAuth>
-              }
-            />
-            <Route
-              path="/teacher/exam-records/:bankId"
-              element={
-                <RequireAuth role="teacher">
-                  <TeacherExamRecordDetail />
-                </RequireAuth>
-              }
-            />
-
-            <Route
-              path="/admin"
-              element={
-                <RequireAuth role="admin">
-                  <AdminUsers />
-                </RequireAuth>
-              }
-            />
-            <Route
-              path="/admin/banks"
-              element={
-                <RequireAuth role="admin">
-                  <AdminBanks />
-                </RequireAuth>
-              }
-            />
-            <Route
-              path="/admin/banks/:id"
-              element={
-                <RequireAuth role="admin">
-                  <AdminBankEdit />
-                </RequireAuth>
-              }
-            />
-
-            <Route
-              path="/student"
-              element={
-                <RequireAuth role="student">
-                  <StudentBanks />
-                </RequireAuth>
-              }
-            />
-            <Route
-              path="/student/practice/:bankId"
-              element={
-                <RequireAuth role="student">
-                  <StudentPractice />
-                </RequireAuth>
-              }
-            />
-            <Route
-              path="/student/records"
-              element={
-                <RequireAuth role="student">
-                  <StudentPracticeRecords />
-                </RequireAuth>
-              }
-            />
-            <Route
-              path="/student/wrong"
-              element={
-                <RequireAuth role="student">
-                  <StudentWrongBook />
-                </RequireAuth>
-              }
-            />
-
-            <Route path="*" element={<Navigate to="/login" replace />} />
-          </Routes>
+          <AnimatedRoutes />
         </Router>
       </ToastProvider>
     </AuthProvider>

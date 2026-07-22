@@ -141,3 +141,12 @@ body {
   font-family: "Segoe UI", "Noto Sans SC", system-ui, sans-serif !important;
   font-style: italic;
 }
+
+/* 路由切换淡入动画（菜单切换右侧内容时触发） */
+@keyframes routeFadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.route-fade-in {
+  animation: routeFadeIn 0.6s ease-out forwards;
+}
