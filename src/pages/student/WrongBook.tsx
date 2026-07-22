@@ -252,13 +252,6 @@ export default function StudentWrongBook() {
                       <span className="tag-neutral">
                         {TYPE_LABELS[w.question_type || 'single']}
                       </span>
-                      <span
-                        className={`tag ${
-                          w.mode === 'exam' ? 'tag-warning' : 'tag-info'
-                        }`}
-                      >
-                        {w.mode === 'exam' ? '来自考试' : '来自练习'}
-                      </span>
                       <span className="ml-auto text-xs text-gray-400">
                         {new Date(w.created_at).toLocaleString('zh-CN')}
                       </span>

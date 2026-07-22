@@ -120,7 +120,6 @@ export default function AdminUsers() {
           label="待审批"
           value={stats.pending}
           icon={<Clock className="w-6 h-6" />}
-          hint={stats.pending > 0 ? '需处理' : '暂无'}
         />
         <StatCard label="已封禁" value={stats.banned} icon={<Ban className="w-6 h-6" />} />
       </div>

@@ -126,7 +126,6 @@ export default function StudentBanks() {
           label="累计练习"
           value={stats.totalCount}
           icon={<History className="w-6 h-6" />}
-          hint="次"
         />
         <StatCard
           label="平均正确率"

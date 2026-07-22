@@ -61,13 +61,11 @@ export default function TeacherExamRecords() {
           label="参与学生"
           value={totalStudents}
           icon={<Users className="w-6 h-6" />}
-          hint="人"
         />
         <StatCard
           label="考试记录"
           value={totalRecords}
           icon={<FileText className="w-6 h-6" />}
-          hint="次"
         />
       </div>
 
