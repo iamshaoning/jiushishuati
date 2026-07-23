@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useToast } from '@/components/Toast';
 import { getBank } from '@/lib/banks';
 import { listQuestions } from '@/lib/questions';
 import { listExamStudentsByBank, listExamWrongAnswersByStudent } from '@/lib/exam';
@@ -17,7 +16,6 @@ const TYPE_LABELS = {
 
 export default function TeacherExamRecordDetail() {
   const { bankId } = useParams<{ bankId: string }>();
-  const toast = useToast();
   const nav = useNavigate();
 
   const [bank, setBank] = useState<QuestionBank | null>(null);

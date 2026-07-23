@@ -60,7 +60,6 @@ function LoginForm({
     setLoading(false);
     if (r.success && r.user) {
       setUser(r.user);
-      toast.success('登录成功');
       const target =
         r.user.role === 'admin' ? '/admin' : r.user.role === 'student' ? '/student' : '/teacher';
       // 触发形变过渡，不立即跳转
@@ -342,7 +341,7 @@ function RegisterForm({ onBack }: { onBack: () => void }) {
   );
 }
 
-/* ---------- 主页面：左右分栏 + mode 切换动画 + 登录/登出形变过渡 ---------- */
+/* ---------- 主页面：纵向(移动)/横向(桌面) + mode 切换动画 + 登录/登出形变过渡 ---------- */
 export default function AuthPage() {
   const loc = useLocation();
   const nav = useNavigate();
@@ -397,60 +396,91 @@ export default function AuthPage() {
 
   // 根据 phase 计算布局参数
   const getLayout = () => {
-    // 计算系统页侧边栏宽度占比（匹配 Layout 的 md:w-60=240px / lg:w-64=256px）
-    const sidebarWidth =
-      typeof window !== 'undefined' && window.innerWidth >= 1024 ? 256 : 240;
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 1100;
+    // 移动端：纵向布局，墨绿品牌区在上、白色表单区在下；形变目标为系统页顶部块高度（顶栏44+次级导航44=88px）
+    if (isMobile) {
+      // 顶栏 logo：px-3(12px) py-3(12px) 黄框 w-5(20px)；idle logo：top-8 left-8(32px) w-10(40px)
+      // 形变后位移至顶栏位置：translate(12-32, 12-32) = (-20, -20)，并 scale(0.5) 缩到顶栏 logo 尺寸
+      const logoAtBar = 'translate(-20px, -20px) scale(0.5)';
+      const logoAtIdle = 'translate(0px, 0px) scale(1)';
+      // 文字额外缩放：idle 文字 text-base(16px)，顶栏文字 text-sm(14px)
+      // 容器整体 scale(0.5) 后文字视觉 8px，需额外 scale(1.75) 抵消到 14px
+      // 配合 transformOrigin: left center，文字左边对齐顶栏文字左边
+      const titleAtBar = 'scale(1.75)';
+      const titleAtIdle = 'scale(1)';
+      switch (phase) {
+        case 'form-fading':
+          return { leftBasis: '40vh', rightBasis: '0', mainGrow: 1, sideOpacity: 0, formOpacity: 0, logoTransform: logoAtIdle, titleTransform: titleAtIdle };
+        case 'expanding':
+          return { leftBasis: '88px', rightBasis: '0', mainGrow: 1, sideOpacity: 0, formOpacity: 0, logoTransform: logoAtBar, titleTransform: titleAtBar };
+        case 'leaving-start':
+          return { leftBasis: '88px', rightBasis: '0', mainGrow: 1, sideOpacity: 0, formOpacity: 0, logoTransform: logoAtBar, titleTransform: titleAtBar };
+        case 'leaving-expand':
+          return { leftBasis: '40vh', rightBasis: '0', mainGrow: 1, sideOpacity: 0, formOpacity: 0, logoTransform: logoAtIdle, titleTransform: titleAtIdle };
+        case 'mode-switching':
+          return { leftBasis: '40vh', rightBasis: '0', mainGrow: 1, sideOpacity: 1, formOpacity: 0, logoTransform: logoAtIdle, titleTransform: titleAtIdle };
+        default:
+          return { leftBasis: '40vh', rightBasis: '0', mainGrow: 1, sideOpacity: 1, formOpacity: 1, logoTransform: logoAtIdle, titleTransform: titleAtIdle };
+      }
+    }
+    // 桌面端：左右分栏，形变目标为系统页侧边栏宽度占比（lg:w-64 = 256px）
+    const sidebarWidth = 256;
     const sidebarPercent = (sidebarWidth / Math.max(window.innerWidth, 1)) * 100;
-
     // mode-switching 阶段用目标 mode 的比例（旧 mode 还未切换）
     const effectiveLogin = targetMode ? targetMode === 'login' : isLogin;
-
+    // 桌面端文字 text-base 与侧边栏文字 text-base 尺寸一致，无需额外缩放
+    const titleTransform = 'scale(1)';
     switch (phase) {
       case 'form-fading':
-        // 登录：表单 + 墨绿元素淡出，logo 保持原位
-        return { leftBasis: '60%', rightBasis: '40%', sideOpacity: 0, formOpacity: 0, logoTranslate: 'translate(0px, 0px)' };
+        return { leftBasis: '60%', rightBasis: '40%', mainGrow: 0, sideOpacity: 0, formOpacity: 0, logoTransform: 'translate(0px, 0px) scale(1)', titleTransform };
       case 'expanding':
-        // 登录：白色展开至系统页比例，logo 位移到 Layout logo 位置
         return {
           leftBasis: `${sidebarPercent}%`,
           rightBasis: `${100 - sidebarPercent}%`,
+          mainGrow: 0,
           sideOpacity: 0,
           formOpacity: 0,
-          logoTranslate: 'translate(-28px, -24px)',
+          logoTransform: 'translate(-28px, -24px) scale(1)',
+          titleTransform,
         };
       case 'leaving-start':
-        // 登出进入：起始态匹配系统页布局，logo 在 Layout 位置
         return {
           leftBasis: `${sidebarPercent}%`,
           rightBasis: `${100 - sidebarPercent}%`,
+          mainGrow: 0,
           sideOpacity: 0,
           formOpacity: 0,
-          logoTranslate: 'translate(-28px, -24px)',
+          logoTransform: 'translate(-28px, -24px) scale(1)',
+          titleTransform,
         };
       case 'leaving-expand':
-        // 登出：墨绿展开到登录页比例，logo 位移回原位
-        // 中部大字/版权保持不可见，等墨绿展开结束（idle 阶段）再淡入
-        return { leftBasis: '60%', rightBasis: '40%', sideOpacity: 0, formOpacity: 0, logoTranslate: 'translate(0px, 0px)' };
+        return { leftBasis: '60%', rightBasis: '40%', mainGrow: 0, sideOpacity: 0, formOpacity: 0, logoTransform: 'translate(0px, 0px) scale(1)', titleTransform };
       case 'mode-switching':
         return {
           leftBasis: effectiveLogin ? '60%' : '50%',
           rightBasis: effectiveLogin ? '40%' : '50%',
+          mainGrow: 0,
           sideOpacity: 1,
           formOpacity: 0,
-          logoTranslate: 'translate(0px, 0px)',
+          logoTransform: 'translate(0px, 0px) scale(1)',
+          titleTransform,
         };
       default:
         return {
           leftBasis: isLogin ? '60%' : '50%',
           rightBasis: isLogin ? '40%' : '50%',
+          mainGrow: 0,
           sideOpacity: 1,
           formOpacity: 1,
-          logoTranslate: 'translate(0px, 0px)',
+          logoTransform: 'translate(0px, 0px) scale(1)',
+          titleTransform,
         };
     }
   };
 
   const layout = getLayout();
+  // logo 旁的品牌文字始终跟随 logo 容器的 transform 一起位移缩放，到达目标位置
+  const titleOpacity = 1;
   // 中部大字/版权的 opacity transition：
   // - idle 阶段 0.5s（登出时文字出现，与 Layout entering 0.5s 一致）
   // - 其他阶段 0.3s（登录时文字消失 0.3s）
@@ -458,10 +488,10 @@ export default function AuthPage() {
     phase === 'idle' ? 'opacity 0.5s ease-out' : 'opacity 0.3s ease-out';
 
   return (
-    <div className="min-h-screen flex bg-cream">
-      {/* 左侧品牌氛围区 */}
+    <div className="min-h-screen flex flex-col desktop:flex-row bg-cream">
+      {/* 品牌氛围区：移动端在上（纵向），桌面端在左 */}
       <aside
-        className="relative hidden lg:flex flex-col justify-between overflow-hidden bg-ink-700 text-white p-12"
+        className="relative flex flex-col justify-between overflow-hidden bg-ink-700 text-white p-8 desktop:p-12"
         style={{
           flexGrow: 0,
           flexShrink: 0,
@@ -473,23 +503,34 @@ export default function AuthPage() {
         <div className="absolute top-40 left-64 w-80 h-80 rounded-full bg-amber-300/5 blur-3xl pointer-events-none" />
         <div className="absolute top-1/2 -right-20 w-[36rem] h-[36rem] rounded-full bg-amber-300/5 blur-3xl pointer-events-none" />
 
-        {/* 墨绿区：logo 图标始终可见，标题/大字/版权分别控制 opacity */}
-        <div className="relative flex flex-col justify-between h-full">
-          {/* 顶部品牌：logo + 标题只位移不缩放（尺寸与 Layout 完全一致），标题始终可见 */}
+        {/* logo：绝对定位，位置稳定不受 aside 高度变化影响（修复形变结束向下闪现） */}
+        <div
+          className="absolute top-8 left-8 desktop:top-12 desktop:left-12 flex items-center gap-3"
+          style={{
+            transform: layout.logoTransform,
+            transformOrigin: 'top left',
+            transition: 'transform 0.5s ease-out',
+          }}
+        >
+          <div className="w-10 h-10 rounded-lg bg-amber-300 flex items-center justify-center shadow-md p-1.5">
+            <img src={FAVICON} alt="玖拾刷题" className="w-full h-full object-contain" />
+          </div>
           <div
-            className="flex items-center gap-3"
+            className="font-display text-base font-bold leading-tight"
             style={{
-              transform: layout.logoTranslate,
-              transformOrigin: 'top left',
-              transition: 'transform 0.5s ease-out',
+              opacity: titleOpacity,
+              transform: layout.titleTransform,
+              transformOrigin: 'left center',
+              transition: 'opacity 0.3s ease-out, transform 0.5s ease-out',
             }}
           >
-            <div className="w-10 h-10 rounded-lg bg-amber-300 flex items-center justify-center shadow-md p-1.5">
-              <img src={FAVICON} alt="玖拾刷题" className="w-full h-full object-contain" />
-            </div>
-            <div className="font-display text-base font-bold leading-tight">玖拾刷题</div>
+            玖拾刷题
           </div>
+        </div>
 
+        {/* 中部大字 + 版权：flex 布局 */}
+        <div className="relative flex flex-col justify-between h-full pointer-events-none">
+          <div />
           {/* 中部大字：sideOpacity 控制 */}
           <div
             style={{
@@ -497,7 +538,7 @@ export default function AuthPage() {
               transition: sideOpacityTransition,
             }}
           >
-            <h1 className="font-display text-5xl font-bold leading-tight text-white">刷题 · 管理</h1>
+            <h1 className="font-display text-4xl desktop:text-5xl font-bold leading-tight text-white">刷题 · 管理</h1>
           </div>
 
           {/* 底部版权：sideOpacity 控制 */}
@@ -513,25 +554,17 @@ export default function AuthPage() {
         </div>
       </aside>
 
-      {/* 右侧表单区 */}
+      {/* 表单区：移动端 flex-1 占满剩余，桌面端固定比例 */}
       <main
         className="flex items-center justify-center p-6"
         style={{
-          flexGrow: 0,
+          flexGrow: layout.mainGrow,
           flexShrink: 0,
           flexBasis: layout.rightBasis,
-          transition: 'flex-basis 0.5s ease-out',
+          transition: 'flex-basis 0.5s ease-out, flex-grow 0.5s ease-out',
         }}
       >
         <div className="w-full max-w-md mx-auto">
-          {/* 移动端品牌 */}
-          <div className="lg:hidden flex items-center gap-3 mb-8 justify-center">
-            <div className="w-10 h-10 rounded-lg bg-amber-300 flex items-center justify-center shadow-md p-1">
-              <img src={FAVICON} alt="玖拾刷题" className="w-full h-full object-contain" />
-            </div>
-            <span className="font-display text-xl font-bold text-ink-700">玖拾刷题</span>
-          </div>
-
           {/* 表单区：用 opacity 控制淡入淡出 */}
           <div
             style={{

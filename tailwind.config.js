@@ -8,6 +8,9 @@ export default {
       center: true,
     },
     extend: {
+      screens: {
+        desktop: '1100px',
+      },
       colors: {
         // 主色：深墨绿
         ink: {

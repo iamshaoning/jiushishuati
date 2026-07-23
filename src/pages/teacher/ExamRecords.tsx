@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
-import { useToast } from '@/components/Toast';
 import StatCard from '@/components/StatCard';
 import { listMyBanks } from '@/lib/banks';
 import { listExamStudentsByBank } from '@/lib/exam';
@@ -16,7 +15,6 @@ interface ExamRow {
 
 export default function TeacherExamRecords() {
   const { user } = useAuth();
-  const toast = useToast();
   const nav = useNavigate();
   const [rows, setRows] = useState<ExamRow[]>([]);
   const [loading, setLoading] = useState(true);

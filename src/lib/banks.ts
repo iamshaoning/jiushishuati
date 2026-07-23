@@ -104,16 +104,6 @@ export async function deleteBank(bankId: string): Promise<{ success: boolean; er
   return { success: true };
 }
 
-export async function getBankByShareCode(code: string): Promise<QuestionBank | null> {
-  const { data, error } = await supabase
-    .from(TABLES.QUESTION_BANKS)
-    .select('*')
-    .eq('share_code', code.trim().toUpperCase())
-    .maybeSingle();
-  if (error || !data) return null;
-  return data as QuestionBank;
-}
-
 /**
  * 管理员：查询全部题库（含 owner_name），调用 RPC get_all_banks_with_owner
  */

@@ -98,7 +98,7 @@ export default function Layout() {
   return (
     <div className="h-screen flex overflow-hidden">
       {/* 侧边栏：背景色保持，logo 区域始终可见，菜单/用户信息淡入淡出 */}
-      <aside className="hidden md:flex md:w-60 lg:w-64 flex-col bg-ink-700 text-white shadow-lg">
+      <aside className="hidden desktop:flex desktop:w-64 flex-col bg-ink-700 text-white shadow-lg z-50">
         {/* 品牌区域：logo + 大标题，始终可见，衔接 AuthPage logo 形变后的位置 */}
         <div className="px-5 py-6 border-b border-ink-600/40">
           <div className="flex items-center gap-3">
@@ -165,34 +165,38 @@ export default function Layout() {
         </div>
       </aside>
 
-      {/* 移动端顶栏 */}
-      <div
-        className={`md:hidden fixed top-0 inset-x-0 z-30 bg-ink-700 text-white px-4 py-3 flex items-center justify-between shadow-md ${asideContentClass}`}
-      >
-        <div className="flex items-center gap-2">
-          <img src={FAVICON} alt="玖拾刷题" className="w-5 h-5 object-contain" />
-          <span className="font-display font-bold">{isAdmin ? '管理员' : isStudent ? '学生' : '教师'}</span>
+      {/* 移动端 fixed 顶部块：顶栏 + 次级导航合并（无空行，整体不随滚动）。
+          父块统一墨绿背景，次级导航文字淡出时背景由父块填充，避免登出闪烁 */}
+      <div className="desktop:hidden fixed top-0 inset-x-0 z-50 bg-ink-700">
+        {/* 顶栏：黄框 logo + 标题 + 右侧操作一行不换行；py-3 让顶部块总高度精确为 88px（顶栏 44 + 次级导航 44） */}
+        <div className="bg-ink-700 text-white px-3 py-3 flex items-center justify-between shadow-md">
+          {/* 品牌：黄框 logo + 标题，shrink-0 防压缩，始终可见（不跟随淡出，衔接 AuthPage 形变） */}
+          <div className="flex items-center gap-1.5 shrink-0">
+            <div className="w-5 h-5 rounded bg-amber-300 flex items-center justify-center shadow-sm">
+              <img src={FAVICON} alt="玖拾刷题" className="w-3.5 h-3.5 object-contain" />
+            </div>
+            <span className="text-sm font-bold text-white whitespace-nowrap">玖拾刷题</span>
+          </div>
+          {/* 右侧操作：用户名 + 退出，shrink-0 防换行，跟随淡入淡出 */}
+          <div className={`flex items-center gap-1.5 shrink-0 ${asideContentClass}`}>
+            <span className="text-xs text-ink-100/70 truncate max-w-[120px]">{user.display_name}</span>
+            <button onClick={handleLogout} aria-label="退出" title="退出登录">
+              <LogOut className="w-4 h-4 text-ink-100/70" />
+            </button>
+          </div>
         </div>
-        <div className="flex items-center gap-3">
-          <span className="text-xs text-ink-100/70 truncate max-w-[120px]">{user.display_name}</span>
-          <button onClick={handleLogout} aria-label="退出">
-            <LogOut className="w-4 h-4 text-ink-100/70" />
-          </button>
-        </div>
-      </div>
-
-      {/* 主内容：进入时淡入，登出时淡出 */}
-      <main className={`flex-1 min-w-0 overflow-y-auto pt-14 md:pt-0 ${mainClass}`}>
-        {/* 移动端次级导航 */}
-        <div className="md:hidden bg-white border-b border-gray-100 px-4 py-2 flex gap-2 overflow-x-auto">
+        {/* 次级导航：紧贴顶栏，文字跟随登出/进入淡出，背景由父块提供保持墨绿；选中琥珀色（同步桌面端菜单配色） */}
+        <div className={`px-4 py-2 flex gap-2 overflow-x-auto transition-opacity ${fadeClass}`}>
           {navItems.map((item) => {
             const active = isActiveItem(loc.pathname, item.to);
             return (
               <Link
                 key={item.to}
                 to={item.to}
-                className={`flex-shrink-0 px-3 py-1.5 rounded text-xs ${
-                  active ? 'bg-ink text-white' : 'bg-gray-100 text-gray-600'
+                className={`flex-shrink-0 px-3 py-1.5 rounded text-xs transition-colors ${
+                  active
+                    ? 'text-amber-200 font-medium'
+                    : 'text-ink-100/70 hover:text-white'
                 }`}
               >
                 {item.label}
@@ -200,10 +204,14 @@ export default function Layout() {
             );
           })}
         </div>
+      </div>
+
+      {/* 主内容：进入时淡入，登出时淡出；独立滚动不影响侧边栏 */}
+      <main className={`flex-1 min-w-0 overflow-y-auto pt-[88px] desktop:pt-0 ${mainClass}`}>
         {/* 右侧内容：key 变化触发重新挂载，播放 route-fade-in 淡入动画 */}
         <div
           key={loc.pathname}
-          className="px-4 md:px-8 lg:px-10 py-6 md:py-8 max-w-7xl mx-auto route-fade-in"
+          className="px-4 desktop:px-10 py-6 desktop:py-8 max-w-7xl mx-auto route-fade-in"
         >
           <Outlet />
         </div>

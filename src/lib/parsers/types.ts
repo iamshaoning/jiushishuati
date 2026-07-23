@@ -70,15 +70,6 @@ export function normalizeOption(opt: string): string {
 }
 
 /**
- * 推断选项前缀字母
- * 支持分隔符：. ． 、 ) ） : ：
- */
-export function optionLetter(opt: string): string {
-  const m = opt.match(/^\s*([A-Za-z])\s*[.．、)）：:]/);
-  return m ? m[1].toUpperCase() : '';
-}
-
-/**
  * 检测行是否为"类型标题"：如 "一、单选题" / "二．多选题" / "三.填空" / "四、判断"
  * 支持分隔符：、 . ．
  * 题型支持：单选/多选/填空/判断（可加"题"字）

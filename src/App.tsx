@@ -3,6 +3,7 @@ import { type ReactNode } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { AuthProvider } from '@/context/AuthContext';
 import { ToastProvider } from '@/components/Toast';
+import ScreenGuard from '@/components/ScreenGuard';
 import { STATUS } from '@/lib/auth';
 import Layout from '@/components/Layout';
 
@@ -112,9 +113,11 @@ export default function App() {
   return (
     <AuthProvider>
       <ToastProvider>
-        <Router>
-          <AnimatedRoutes />
-        </Router>
+        <ScreenGuard>
+          <Router>
+            <AnimatedRoutes />
+          </Router>
+        </ScreenGuard>
       </ToastProvider>
     </AuthProvider>
   );

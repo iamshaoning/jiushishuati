@@ -137,12 +137,12 @@ export default function AdminUsers() {
             {labelOf(f)}
           </button>
         ))}
-        <div className="ml-auto">
+        <div className="flex-1 min-w-[200px]">
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="搜索用户名或姓名"
-            className="input-field w-56"
+            className="input-field w-full"
           />
         </div>
       </div>

@@ -113,6 +113,12 @@ body {
   }
 }
 
+/* 表格单元格禁止换行（内容超长时由外层 overflow-x-auto 横向滚动） */
+table td,
+table th {
+  white-space: nowrap;
+}
+
 /* 表格内题目内容渲染（图片+换行） */
 .question-content img {
   max-width: 100%;

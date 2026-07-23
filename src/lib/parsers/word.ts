@@ -2,7 +2,6 @@ import * as mammoth from 'mammoth';
 import JSZip from 'jszip';
 import omml2mathml from 'omml2mathml';
 import { MathMLToLaTeX } from 'mathml-to-latex';
-import type { ParsedQuestion } from '../types';
 import type { ParseResult } from './types';
 import { parsePastedText } from './text';
 

@@ -14,7 +14,6 @@ import {
   Shuffle,
   CheckCircle2,
   Save,
-  FileText,
   ClipboardList,
 } from 'lucide-react';
 
@@ -118,7 +117,6 @@ export default function TeacherExamNew() {
   };
 
   const selectedCount = selectedIds.size;
-  const selectedQuestions = questions.filter((q) => selectedIds.has(q.id));
 
   const handleCreate = async () => {
     if (!user) return;

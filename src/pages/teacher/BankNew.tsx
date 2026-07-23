@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, Fragment } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/components/Toast';
@@ -224,10 +224,10 @@ export default function BankNew() {
 
       {/* 步骤进度条 */}
       <div className="card p-4 mb-6">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center">
           {STEPS.map((s, i) => (
-            <div key={s} className="flex-1 flex items-center">
-              <div className="flex flex-col items-center flex-1">
+            <Fragment key={s}>
+              <div className="flex flex-col items-center shrink-0">
                 <div
                   className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-num font-bold transition-colors ${
                     i < step
@@ -239,12 +239,12 @@ export default function BankNew() {
                 >
                   {i < step ? <CheckCircle2 className="w-4 h-4" /> : i + 1}
                 </div>
-                <div className={`text-xs mt-1.5 ${i <= step ? 'text-ink-700 font-medium' : 'text-gray-400'}`}>{s}</div>
+                <div className={`text-xs mt-1.5 whitespace-nowrap ${i <= step ? 'text-ink-700 font-medium' : 'text-gray-400'}`}>{s}</div>
               </div>
               {i < STEPS.length - 1 && (
                 <div className={`h-0.5 flex-1 -mt-5 ${i < step ? 'bg-ink-700' : 'bg-gray-200'}`} />
               )}
-            </div>
+            </Fragment>
           ))}
         </div>
       </div>

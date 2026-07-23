@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useParams, useSearchParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useSearchParams, Link } from 'react-router-dom';
 import { useToast } from '@/components/Toast';
 import { useAuth } from '@/context/AuthContext';
 import { getBank } from '@/lib/banks';
@@ -72,7 +72,6 @@ export default function StudentPractice() {
   const { bankId } = useParams<{ bankId: string }>();
   const [searchParams] = useSearchParams();
   const urlMode: 'practice' | 'exam' = searchParams.get('mode') === 'exam' ? 'exam' : 'practice';
-  const nav = useNavigate();
   const toast = useToast();
   const { user } = useAuth();
 
